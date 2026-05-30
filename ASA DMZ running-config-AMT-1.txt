@@ -1,0 +1,109 @@
+DMZASA#show run
+: Saved
+:
+ASA Version 9.6(1)
+!
+hostname DMZASA
+names
+!
+interface GigabitEthernet1/1
+ description DMZ interface to server 10.10.10.11 (                                                                           NAT 199.199.199.11                                                                           )
+ nameif DMZ
+ security-level 100
+ ip address 10.10.10.1 255.255.255.0
+!
+interface GigabitEthernet1/2
+ description OUTSIDE interface to Perimeter Router (                                                                           199.199.199.9                                                                           )
+ nameif outside
+ security-level 0
+ ip address 199.199.199.10 255.255.255.248
+!
+interface GigabitEthernet1/3
+ no nameif
+ no security-level
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/4
+ no nameif
+ no security-level
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/5
+ no nameif
+ no security-level
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/6
+ no nameif
+ no security-level
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/7
+ no nameif
+ no security-level
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/8
+ no nameif
+ no security-level
+ no ip address
+ shutdown
+!
+interface Management1/1
+ management-only
+ no nameif
+ no security-level
+ no ip address
+ shutdown
+!
+object network DMZ
+ subnet 10.10.10.0 255.255.255.0
+object network webserver
+ host 10.10.10.11
+ nat (DMZ,outside) static 199.199.199.11
+object network webservice-external-ip
+ host 199.199.199.11
+!
+route outside 0.0.0.0 0.0.0.0 199.199.199.9 1
+!
+access-list OUTSIDEIN extended permit icmp any any echo
+access-list OUTSIDEIN extended permit icmp any any echo-reply
+access-list OUTSIDEIN extended permit icmp any any unreachable
+access-list OUTSIDEIN extended permit udp  any object webserver eq domain
+access-list OUTSIDEIN extended permit udp  any object webservice-external-ip eq domain
+access-list OUTSIDEIN extended permit tcp any object webserver eq www
+access-list OUTSIDEIN extended permit tcp any object webserver eq 443
+access-list OUTSIDEIN extended permit tcp any object webservice-external-ip eq www
+access-list OUTSIDEIN extended permit tcp any object webservice-external-ip eq 443
+access-list OUTSIDEIN extended permit tcp any any
+!
+!
+access-group OUTSIDEIN in interface outside
+!
+!
+class-map inspection_default
+ match default-inspection-traffic
+!
+policy-map type inspect dns preset_dns_map
+ parameters
+  message-length maximum 512
+policy-map global_policy
+ class inspection_default
+  inspect dns preset_dns_map
+  inspect ftp 
+  inspect tftp 
+!
+service-policy global_policy global
+!
+telnet timeout 5
+ssh timeout 5
+!
+!
+!
+!
+DMZASA# 

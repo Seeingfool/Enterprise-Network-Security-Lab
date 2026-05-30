@@ -1,0 +1,103 @@
+Perimeter-Router#
+%SYS-5-CONFIG_I: Configured from console by console
+show run
+Building configuration...
+
+Current configuration : 1564 bytes
+!
+version 12.2
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+no service password-encryption
+!
+hostname Perimeter-Router
+!
+!
+!
+enable password capstone
+!
+!
+!
+!
+!
+!
+no ip cef
+no ipv6 cef
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface GigabitEthernet0/0
+ description PUBLIC ISP Interface to SUPERISP.COM
+ ip address 199.199.199.2 255.255.255.248
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet1/0
+ description TO ZERODAY.COM Internal CORE ASA (Outside)
+ ip address 199.199.199.17 255.255.255.248
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet2/0
+ description To DMZ.ZERODAY.COM dmz ASA (Outside)
+ ip address 199.199.199.9 255.255.255.248
+ duplex auto
+ speed auto
+!
+ip classless
+ip route 0.0.0.0 0.0.0.0 199.199.199.1 
+ip route 10.10.10.0 255.255.255.0 199.199.199.10 
+!
+ip flow-export version 9
+!
+!
+access-list 110 deny ip 10.0.0.0 0.255.255.255 any
+access-list 110 deny ip 172.16.0.0 0.15.255.255 any
+access-list 110 deny ip 192.168.0.0 0.0.255.255 any
+access-list 110 deny ip 0.0.0.0 0.255.255.255 any
+access-list 110 permit udp any host 199.199.199.10 eq domain
+access-list 110 permit udp any host 199.199.199.11 eq domain
+access-list 110 permit tcp any host 199.199.199.11 eq www
+access-list 110 permit tcp any host 199.199.199.11 eq ftp
+access-list 110 permit icmp any host 199.199.199.11
+access-list 110 permit tcp any host 199.199.199.10 established
+access-list 110 deny ip any any
+!
+!
+!
+!
+!
+!
+line con 0
+ password cisco
+ login
+!
+line aux 0
+!
+line vty 0 4
+ password cisco
+ login
+line vty 5 15
+ no login
+!
+!
+!
+end
+
+
+Perimeter-Router# 
