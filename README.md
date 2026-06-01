@@ -3,7 +3,7 @@
 
 **Academic Capstone Project | Texas State Technical College | Cybersecurity Program**
 
-A fully configured, multi-floor enterprise network built from the ground up — covering physical cabling, VLAN segmentation, Active Directory, firewall policy, web/FTP services, VPN, and host hardening. The simulated organization is **Zero Day Media Inc.**, a multi-department media company with 4 floors, 70+ users, and a DMZ-facing public web presence.
+A fully configured, multi-floor enterprise network built from the ground up covering physical cabling, VLAN segmentation, Active Directory, firewall policy, web/FTP services, VPN, and host hardening. The simulated organization is **Zero Day Media Inc.**, a multi-department media company with 4 floors, 70+ users, and a DMZ-facing public web presence.
 
 ---
 
